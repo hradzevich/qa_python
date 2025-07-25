@@ -8,6 +8,16 @@ def collector():
     return BooksCollector()
 
 
+# создаем фикстуру для создания экземпляра класса с коллекцией книг без присвоенных жанров
+@pytest.fixture
+def collector_with_books():
+    collector = BooksCollector()
+    book_lst = ["Гарри Поттер", "Шерлок Холмс"]
+    for book_name in book_lst:
+        collector.add_new_book(book_name)
+    return collector
+
+
 # создаем фикстуру для создания экземпляра класса с коллекцией книг с присвоенными им жанрами
 @pytest.fixture
 def collector_with_books_and_genres():
@@ -28,24 +38,29 @@ def collector_with_books_and_genres():
 class TestBooksCollector:
     # тестируем add_two_books - добавление двух книг
     def test_add_new_book_add_two_books(self, collector):
-        # добавляем две книги
         collector.add_new_book("Гордость и предубеждение и зомби")
         collector.add_new_book("Что делать, если ваш кот хочет вас убить")
-        # проверяем, что добавилось именно две
-        # словарь books_genre, который нам возвращает метод get_books_genre, имеет длину 2
         assert len(collector.get_books_genre()) == 2
 
-    # параметризация для проверки установки жанра у разных книг
-    @pytest.mark.parametrize(
-        "book_name, genre",
-        [["Гарри Поттер", "Фантастика"], ["Шерлок Холмс", "Детективы"]],
-    )
-    # тестируем set_book_genre - установка жанра у добавленных в books_genre книг
-    def test_set_book_genre_books_from_books_genre(
-        self, collector, book_name, genre
-    ):
+    # параметризация для проверки установки жанра у разных книг добавленных в books_genre
+    @pytest.mark.parametrize("genre", ["Фантастика", "Детективы"])
+    # тестируем set_book_genre - установка жанра соответсвенно книге у добавленных в books_genre книг
+    def test_set_book_genre_books_from_books_genre(self, collector_with_books, genre):
+        for book in collector_with_books.books_genre.keys():
+            collector_with_books.set_book_genre(book, genre)
+            assert collector_with_books.books_genre[book] == genre
 
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, genre)
+    # тестируем set_book_genre - книге не из books_genre жанр из genre не присваивается
+    def test_set_book_genre_books_not_in_books_genre(
+        self, collector_with_books):
+        book_name = "Оно"
+        genre = "Ужасы"
+        collector_with_books.set_book_genre(book_name, genre)
+        assert book_name not in collector_with_books_and_genres.books_genre
 
-        assert collector.books_genre[book_name] == genre
+    # тестируем set_book_genre - книге из books_genre не присваивается жанр не из genre
+    def test_set_book_genre_genre_not_in_genre(self, collector_with_books):
+        book_name = "Гарри Поттер"
+        genre = "Хоррор"
+        collector_with_books.set_book_genre(book_name, genre)
+        assert collector_with_books.books_genre.get(book_name) == ""
