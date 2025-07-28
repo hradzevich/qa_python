@@ -132,6 +132,9 @@ class TestBooksCollector:
         books_with_specific_genre = (
             collector_with_books_and_genres.get_books_with_specific_genre("Детективы")
         )
+        for book in books_with_specific_genre:
+            genre = collector_with_books_and_genres.get_book_genre(book)
+            assert genre == "Детективы"
         assert len(books_with_specific_genre) == 2
 
     # параметризация для проверки вывода пустого списка, если жанра нет среди книг в коллекции и отсутствует в списке genre
@@ -168,3 +171,15 @@ class TestBooksCollector:
             "Достать ножи": "Детективы",
             "Друзья": "Комедии",
         }
+    
+    # тестируем get_books_for_children - получаем книги подходящие детям
+    def test_get_books_for_children_genre_not_in_age_rating(self, collector_with_books_and_genres):
+        books_for_children = collector_with_books_and_genres.get_books_for_children()
+        for book in books_for_children:
+            genre = collector_with_books_and_genres.get_book_genre(book)
+            assert genre not in collector_with_books_and_genres.genre_age_rating
+        assert len(books_for_children) == 3
+
+
+    
+
