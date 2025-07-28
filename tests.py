@@ -145,3 +145,26 @@ class TestBooksCollector:
             collector_with_books_and_genres.get_books_with_specific_genre(genre)
         )
         assert books_with_specific_genre == []
+
+    # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
+    def test_get_books_genre_empty_collection(self, collector):
+        collector.get_books_genre = {}
+
+    # тестируем get_books_genre - получаем словарь только с названиями книг, так как жанры не были присвоены
+    def test_get_books_genre_collection_with_books(self, collector_with_books):
+        collector_with_books.get_books_genre = {
+            "Гарри Поттер и дары смерти": "",
+            "Шерлок Холмс. Пустой дом": "",
+        }
+
+    # тестируем get_books_genre - получаем словарь с названиями книг и присвоенными им жанрами
+    def test_get_books_genre_collection_with_books_and_genres(
+        self, collector_with_books_and_genres
+    ):
+        collector_with_books_and_genres.get_books_genre = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс. Пустой дом": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
