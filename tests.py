@@ -160,11 +160,11 @@ class TestBooksCollector:
 
     # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
     def test_get_books_genre_empty_collection(self, collector):
-        collector.get_books_genre = {}
+        assert collector.get_books_genre = {}
 
     # тестируем get_books_genre - получаем словарь только с названиями книг, так как жанры не были присвоены
     def test_get_books_genre_collection_with_books(self, collector_with_books):
-        collector_with_books.get_books_genre = {
+        assert collector_with_books.get_books_genre = {
             "Гарри Поттер и дары смерти": "",
             "Шерлок Холмс": "",
         }
@@ -173,7 +173,7 @@ class TestBooksCollector:
     def test_get_books_genre_collection_with_books_and_genres(
         self, collector_with_books_and_genres
     ):
-        collector_with_books_and_genres.get_books_genre = {
+        assert collector_with_books_and_genres.get_books_genre = {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
             "Том и Джерри": "Мультфильмы",
@@ -191,14 +191,16 @@ class TestBooksCollector:
             assert genre not in collector_with_books_and_genres.genre_age_rating
         assert len(books_for_children) == 3
 
-    # тестируем add_book_in_favorites - добавление книги из books_genre в favorites, книги в favorites еще нет
+    # тестируем add_book_in_favorites - добавление новой книги из books_genre в favorites
     def test_add_book_in_favorites_book_from_books_genre(
         self, collector_with_books_and_genres
     ):
         book_name = "Достать ножи"
+        before_change_favorites = len(collector_with_favorites.favorites)
         collector_with_books_and_genres.add_book_in_favorites(book_name)
+        after_change_favorites = len(collector_with_favorites.favorites)
         assert book_name in collector_with_books_and_genres.favorites
-        assert len(collector_with_books_and_genres.favorites) == 1
+        assert after_change_favorites == before_change_favorites + 1
 
     # параметризация для проверки, что книга не из не из books_genre и книга уже добавленная в favorites не могут быть добавлены в favorites
     @pytest.mark.parametrize(
