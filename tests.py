@@ -23,8 +23,8 @@ def collector_with_books():
 def collector_with_books_and_genres():
     collector = BooksCollector()
     collection = [
-        ["Гарри Поттер", "Фантастика"],
-        ["Шерлок Холмс", "Детективы"],
+        ["Гарри Поттер и дары смерти", "Фантастика"],
+        ["Шерлок Холмс. Пустой дом", "Детективы"],
         ["Том и Джерри", "Мультфильмы"],
         ["Друзья", "Комедии"],
     ]
@@ -36,11 +36,19 @@ def collector_with_books_and_genres():
 
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
 class TestBooksCollector:
-    # тестируем add_two_books - добавление двух книг
-    def test_add_new_book_add_two_books(self, collector):
-        collector.add_new_book("Гордость и предубеждение и зомби")
-        collector.add_new_book("Что делать, если ваш кот хочет вас убить")
-        assert len(collector.get_books_genre()) == 2
+    #параметризация для проверки добавления книг с валидным количеством символов в названии (1, 2, 39, 40)
+    @pytest.mark.parametrize("book_name", ["Я", "Мы", "Тайны затерянного города среди джунглей", "Тени исчезают в тумане над старым мостом"])
+    # тестируем add_new_book - добавление книг с валидным количеством символов в названии 
+    def test_add_new_book_add_books_with_valid_len(self, collector, book_name):
+        collector.add_new_book(book_name)
+        assert len(collector.get_books_genre()) == 4
+
+    #параметризация для проверки, что книги с невалидным количеством символов в названии (0, 41, 59) не попадают в коллекцию
+    @pytest.mark.parametrize("book_name", ["", "Проклятие заброшенного дома на краю света", "Тайны древних руин, скрывающихся под покровом ночи и тумана"])
+    # тестируем add_new_book - книги с невалидным количеством символов в названии не добавляются в коллекцию
+    def test_add_new_book_add_books_with_invalid_len(self, collector, book_name):
+        collector.add_new_book(book_name)
+        assert len(collector.get_books_genre()) == 0
 
     # параметризация для проверки установки жанра у разных книг добавленных в books_genre
     @pytest.mark.parametrize("genre", ["Фантастика", "Детективы"])
