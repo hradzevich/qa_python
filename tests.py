@@ -58,6 +58,7 @@ class TestBooksCollector:
     )
     # тестируем add_new_book - добавление книг с валидным количеством символов в названии
     def test_add_new_book_add_books_with_valid_len(self, collector, book_name):
+        collector.add_new_book(book_name)
         assert book_name in collector.books_genre.keys()
 
     # параметризация для проверки, что книги с невалидным количеством символов в названии (0, 41, 59) не попадают в коллекцию
@@ -248,5 +249,4 @@ class TestBooksCollector:
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
     def test_get_list_of_favorites_books_books_in_favorites(self, collector_with_books):
-        collector_with_books.get_list_of_favorites_books()
-        assert collector_with_books == []
+        assert collector_with_books.get_list_of_favorites_books() == []
