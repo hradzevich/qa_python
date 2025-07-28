@@ -12,7 +12,7 @@ def collector():
 @pytest.fixture
 def collector_with_books():
     collector = BooksCollector()
-    book_lst = ["Гарри Поттер и дары смерти", "Шерлок Холмс. Пустой дом"]
+    book_lst = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
     for book_name in book_lst:
         collector.add_new_book(book_name)
     return collector
@@ -58,8 +58,7 @@ class TestBooksCollector:
     )
     # тестируем add_new_book - добавление книг с валидным количеством символов в названии
     def test_add_new_book_add_books_with_valid_len(self, collector, book_name):
-        collector.add_new_book(book_name)
-        assert len(collector.get_books_genre()) == 4
+        assert book_name in collector.books_genre.keys()
 
     # параметризация для проверки, что книги с невалидным количеством символов в названии (0, 41, 59) не попадают в коллекцию
     @pytest.mark.parametrize(
@@ -73,7 +72,7 @@ class TestBooksCollector:
     # тестируем add_new_book - книги с невалидным количеством символов в названии не добавляются в коллекцию
     def test_add_new_book_add_books_with_invalid_len(self, collector, book_name):
         collector.add_new_book(book_name)
-        assert len(collector.get_books_genre()) == 0
+        assert book_name not in collector.books_genre.keys()
 
     # тестируем add_new_book - книга повторно не добавляется в коллекцию
     def test_add_new_book_add_added_book(self, collector_with_books_and_genres):
@@ -160,11 +159,11 @@ class TestBooksCollector:
 
     # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
     def test_get_books_genre_empty_collection(self, collector):
-        assert collector.get_books_genre == {}
+        assert collector.get_books_genre() == {}
 
     # тестируем get_books_genre - получаем словарь только с названиями книг, так как жанры не были присвоены
     def test_get_books_genre_collection_with_books(self, collector_with_books):
-        assert collector_with_books.get_books_genre == {
+        assert collector_with_books.get_books_genre() == {
             "Гарри Поттер и дары смерти": "",
             "Шерлок Холмс": "",
         }
@@ -173,7 +172,7 @@ class TestBooksCollector:
     def test_get_books_genre_collection_with_books_and_genres(
         self, collector_with_books_and_genres
     ):
-        assert collector_with_books_and_genres.get_books_genre == {
+        assert collector_with_books_and_genres.get_books_genre() == {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
             "Том и Джерри": "Мультфильмы",
@@ -196,9 +195,9 @@ class TestBooksCollector:
         self, collector_with_books_and_genres
     ):
         book_name = "Достать ножи"
-        before_change_favorites = len(collector_with_favorites.favorites)
+        before_change_favorites = len(collector_with_books_and_genres.favorites)
         collector_with_books_and_genres.add_book_in_favorites(book_name)
-        after_change_favorites = len(collector_with_favorites.favorites)
+        after_change_favorites = len(collector_with_books_and_genres.favorites)
         assert book_name in collector_with_books_and_genres.favorites
         assert after_change_favorites == before_change_favorites + 1
 
@@ -221,12 +220,10 @@ class TestBooksCollector:
     ):
         book_to_delete = "Том и Джерри"
         before_change_favorites = len(collector_with_favorites.favorites)
-        deleted_book = collector_with_favorites.delete_book_from_favorites(
-            book_to_delete
-        )
+        collector_with_favorites.delete_book_from_favorites(book_to_delete)
         after_change_favorites = len(collector_with_favorites.favorites)
-        assert deleted_book not in collector_with_favorites.favorites
-        assert deleted_book in collector_with_favorites.books_genre
+        assert book_to_delete not in collector_with_favorites.favorites
+        assert book_to_delete in collector_with_favorites.books_genre
         assert after_change_favorites == before_change_favorites - 1
 
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
@@ -235,9 +232,7 @@ class TestBooksCollector:
     ):
         book_to_delete = "Шерлок Холмс"
         before_change_favorites = len(collector_with_favorites.favorites)
-        deleted_book = collector_with_favorites.delete_book_from_favorites(
-            book_to_delete
-        )
+        collector_with_favorites.delete_book_from_favorites(book_to_delete)
         after_change_favorites = len(collector_with_favorites.favorites)
         assert after_change_favorites == before_change_favorites
 
