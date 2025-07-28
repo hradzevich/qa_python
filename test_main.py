@@ -248,5 +248,5 @@ class TestBooksCollector:
         ]
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
-    def test_get_list_of_favorites_books_books_in_favorites(self, collector_with_books):
+    def test_get_list_of_favorites_books_no_books_in_favorites(self, collector_with_books):
         assert collector_with_books.get_list_of_favorites_books() == []
