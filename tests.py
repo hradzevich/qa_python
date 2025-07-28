@@ -232,7 +232,7 @@ class TestBooksCollector:
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
     def test_delete_book_from_favorites_book_not_in_favorites(
         self, collector_with_favorites
-    ):  
+    ):
         book_to_delete = "Шерлок Холмс"
         before_change_favorites = len(collector_with_favorites.favorites)
         deleted_book = collector_with_favorites.delete_book_from_favorites(
@@ -240,3 +240,18 @@ class TestBooksCollector:
         )
         after_change_favorites = len(collector_with_favorites.favorites)
         assert after_change_favorites == before_change_favorites
+
+    # тестируем get_list_of_favorites_books - получение списка книг, добавленных в favorites
+    def test_get_list_of_favorites_books_books_in_favorites(
+        self, collector_with_favorites
+    ):
+        collector_with_favorites.get_list_of_favorites_books()
+        assert collector_with_favorites.favorites == [
+            "Гарри Поттер и дары смерти",
+            "Том и Джерри",
+        ]
+
+    # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
+    def test_get_list_of_favorites_books_books_in_favorites(self, collector_with_books):
+        collector_with_books.get_list_of_favorites_books()
+        assert collector_with_books == []
