@@ -90,7 +90,7 @@ class TestBooksCollector:
         book_name = "Оно"
         genre = "Ужасы"
         collector_with_books.set_book_genre(book_name, genre)
-        assert book_name not in collector_with_books_and_genres.books_genre
+        assert book_name not in collector_with_books.books_genre
 
     # тестируем set_book_genre - книге из books_genre не присваивается жанр не из genre
     def test_set_book_genre_genre_not_in_genre(self, collector_with_books):
@@ -98,3 +98,23 @@ class TestBooksCollector:
         genre = "Хоррор"
         collector_with_books.set_book_genre(book_name, genre)
         assert collector_with_books.books_genre.get(book_name) == ""
+
+    # параметризация для проверки соответствия выведенного жанра жанру в books_genre
+    @pytest.mark.parametrize("book_name, expected_genre",
+    [
+        ["Гарри Поттер и дары смерти", "Фантастика"],
+        ["Шерлок Холмс. Пустой дом", "Детективы"],
+        ["Том и Джерри", "Мультфильмы"],
+        ["Друзья", "Комедии"],
+    ])
+    # тестируем get_book_genre - выводит присвоенный книге жанр по её имени
+    def test_get_book_genre_book_with_genre_in_collection(self, collector_with_books_and_genres, book_name, expected_genre):
+        genre_in_collection = collector_with_books_and_genres.get_book_genre(book_name)
+        assert genre_in_collection == expected_genre
+    
+    # тестируем get_book_genre - выводит пустое значение по имени книги, если жанр книге не был присвоен
+    def test_get_book_genre_book_with_genre_in_collection(self, collector_with_books):
+        book_name = "Шерлок Холмс. Пустой дом"
+        assert collector_with_books.get_book_genre(book_name) == ""
+
+      
