@@ -81,11 +81,8 @@ class TestBooksCollector:
         before_adding_book_again = len(collector_with_books_and_genres.books_genre)
         collector_with_books_and_genres.add_new_book(book_name)
         after_adding_book_again = len(collector_with_books_and_genres.books_genre)
-        assert (
-            before_adding_book_again == after_adding_book_again
-            and collector_with_books_and_genres.get_book_genre(book_name)
-            == "Фантастика"
-        )
+        assert before_adding_book_again == after_adding_book_again
+        assert collector_with_books_and_genres.get_book_genre(book_name) == "Фантастика"
 
     # параметризация для проверки установки жанра у разных книг добавленных в books_genre
     @pytest.mark.parametrize("genre", ["Фантастика", "Детективы"])
@@ -142,8 +139,7 @@ class TestBooksCollector:
             collector_with_books_and_genres.get_books_with_specific_genre("Детективы")
         )
         for book in books_with_specific_genre:
-            genre = collector_with_books_and_genres.get_book_genre(book)
-            assert genre == "Детективы"
+            assert collector_with_books_and_genres.get_book_genre(book) == "Детективы"
         assert len(books_with_specific_genre) == 2
 
     # параметризация для проверки вывода пустого списка, если жанра нет среди книг в коллекции и отсутствует в списке genre
@@ -153,10 +149,7 @@ class TestBooksCollector:
     def test_get_books_with_specific_genre_empty_lst(
         self, collector_with_books_and_genres, genre
     ):
-        books_with_specific_genre = (
-            collector_with_books_and_genres.get_books_with_specific_genre(genre)
-        )
-        assert books_with_specific_genre == []
+        assert collector_with_books_and_genres.get_books_with_specific_genre(genre) == []
 
     # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
     def test_get_books_genre_empty_collection(self, collector):
