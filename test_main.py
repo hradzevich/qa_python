@@ -105,11 +105,14 @@ class TestBooksCollector:
         assert book_name not in collector.books_genre
 
     # тестируем set_book_genre - книге из books_genre не присваивается жанр не из genre
-    def test_set_book_genre_genre_not_in_genre(self, collector_with_books):
+    def test_set_book_genre_genre_not_in_genre(self, collector):
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
+            collector.add_new_book(book)
         book_name = "Гарри Поттер и дары смерти"
         genre = "Хоррор"
-        collector_with_books.set_book_genre(book_name, genre)
-        assert collector_with_books.books_genre.get(book_name) == ""
+        collector.set_book_genre(book_name, genre)
+        assert collector.books_genre.get(book_name) == ""
 
     # параметризация для проверки соответствия выведенного жанра жанру в books_genre
     @pytest.mark.parametrize(
