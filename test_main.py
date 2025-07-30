@@ -249,5 +249,6 @@ class TestBooksCollector:
         assert collector.get_list_of_favorites_books() == ["Гарри Поттер и дары смерти"]
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
-    def test_get_list_of_favorites_books_no_books_in_favorites(self, collector):
+    def test_get_list_of_favorites_books_books_in_favorites(self, collector):
         assert collector.get_list_of_favorites_books() == []
+    
