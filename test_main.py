@@ -2,48 +2,6 @@ import pytest
 from main import BooksCollector
 
 
-# создаем фикстуру для создания экземпляра класса
-@pytest.fixture
-def collector():
-    return BooksCollector()
-
-
-# создаем фикстуру для создания экземпляра класса с коллекцией книг без присвоенных жанров
-@pytest.fixture
-def collector_with_books():
-    collector = BooksCollector()
-    book_lst = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
-    for book_name in book_lst:
-        collector.add_new_book(book_name)
-    return collector
-
-
-# создаем фикстуру для создания экземпляра класса с коллекцией книг с присвоенными им жанрами
-@pytest.fixture
-def collector_with_books_and_genres():
-    collector = BooksCollector()
-    collection = [
-        ["Гарри Поттер и дары смерти", "Фантастика"],
-        ["Шерлок Холмс", "Детективы"],
-        ["Том и Джерри", "Мультфильмы"],
-        ["Достать ножи", "Детективы"],
-        ["Друзья", "Комедии"],
-    ]
-    for book_name, genre in collection:
-        collector.add_new_book(book_name)
-        collector.set_book_genre(book_name, genre)
-    return collector
-
-
-# создаем фикстуру для создания экземпляра класса с коллекцией книг с присвоенными им жанрами, а также книгами в Избранном
-@pytest.fixture
-def collector_with_favorites(collector_with_books_and_genres):
-    books_to_favorites = ["Гарри Поттер и дары смерти", "Том и Джерри"]
-    for book in books_to_favorites:
-        collector_with_books_and_genres.add_book_in_favorites(book)
-    return collector_with_books_and_genres
-
-
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
 class TestBooksCollector:
     # параметризация для проверки добавления книг с валидным количеством символов в названии (1, 2, 39, 40)
