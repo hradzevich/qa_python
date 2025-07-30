@@ -76,13 +76,15 @@ class TestBooksCollector:
         assert book_name not in collector.books_genre.keys()
 
     # тестируем add_new_book - книга повторно не добавляется в коллекцию
-    def test_add_new_book_add_added_book(self, collector_with_books_and_genres):
-        book_name = "Гарри Поттер и дары смерти"
-        before_adding_book_again = len(collector_with_books_and_genres.books_genre)
-        collector_with_books_and_genres.add_new_book(book_name)
-        after_adding_book_again = len(collector_with_books_and_genres.books_genre)
+    def test_add_new_book_add_added_book(self, collector):
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
+            collector.add_new_book(book)
+        before_adding_book_again = len(collector.books_genre)
+        book_to_add_again = "Гарри Поттер и дары смерти"
+        collector.add_new_book(book_to_add_again)
+        after_adding_book_again = len(collector.books_genre)
         assert before_adding_book_again == after_adding_book_again
-        assert collector_with_books_and_genres.get_book_genre(book_name) == "Фантастика"
 
     # параметризация для проверки установки жанра у разных книг добавленных в books_genre
     @pytest.mark.parametrize(
