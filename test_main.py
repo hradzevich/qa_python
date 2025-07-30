@@ -236,9 +236,7 @@ class TestBooksCollector:
             assert genre not in collector.genre_age_rating
 
     # тестируем add_book_in_favorites - добавление новой книги из books_genre в favorites
-    def test_add_book_in_favorites_book_from_books_genre(
-        self, collector
-    ):
+    def test_add_book_in_favorites_book_from_books_genre(self, collector):
         books_with_genres = {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
@@ -259,11 +257,22 @@ class TestBooksCollector:
     )
     # тестируем add_book_in_favorites - книга не из books_genre и книга уже добавленная в favorites не могут быть добавлены в favorites
     def test_add_book_in_favorites_unavailable_books_for_favorites(
-        self, collector_with_favorites, unavailable_book_for_favorites
+        self, collector, unavailable_book_for_favorites
     ):
-        before_change_favorites = len(collector_with_favorites.favorites)
-        collector_with_favorites.add_book_in_favorites(unavailable_book_for_favorites)
-        after_change_favorites = len(collector_with_favorites.favorites)
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        collector.add_book_in_favorites("Гарри Поттер и дары смерти")
+        before_change_favorites = len(collector.favorites)
+        collector.add_book_in_favorites(unavailable_book_for_favorites)
+        after_change_favorites = len(collector.favorites)
         assert after_change_favorites == before_change_favorites
 
     # тестируем delete_book_from_favorites - книга, ранее добавленная в favorites, удаляется из favorites
