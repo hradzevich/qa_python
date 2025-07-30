@@ -98,11 +98,11 @@ class TestBooksCollector:
         assert collector.books_genre[book_name] == genre
 
     # тестируем set_book_genre - книге не из books_genre жанр из genre не присваивается
-    def test_set_book_genre_books_not_in_books_genre(self, collector_with_books):
+    def test_set_book_genre_books_not_in_books_genre(self, collector):
         book_name = "Оно"
         genre = "Ужасы"
-        collector_with_books.set_book_genre(book_name, genre)
-        assert book_name not in collector_with_books.books_genre
+        collector.set_book_genre(book_name, genre)
+        assert book_name not in collector.books_genre
 
     # тестируем set_book_genre - книге из books_genre не присваивается жанр не из genre
     def test_set_book_genre_genre_not_in_genre(self, collector_with_books):
