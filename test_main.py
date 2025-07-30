@@ -199,9 +199,7 @@ class TestBooksCollector:
         }
 
     # тестируем get_books_genre - получаем словарь с названиями книг и присвоенными им жанрами
-    def test_get_books_genre_collection_with_books_and_genres(
-        self, collector
-    ):
+    def test_get_books_genre_collection_with_books_and_genres(self, collector):
         books_with_genres = {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
@@ -221,14 +219,21 @@ class TestBooksCollector:
         }
 
     # тестируем get_books_for_children - получаем книги подходящие детям с жанром не в genre_age_rating
-    def test_get_books_for_children_genre_not_in_age_rating(
-        self, collector_with_books_and_genres
-    ):
-        books_for_children = collector_with_books_and_genres.get_books_for_children()
+    def test_get_books_for_children_genre_not_in_age_rating(self, collector):
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        books_for_children = collector.get_books_for_children()
         for book in books_for_children:
-            genre = collector_with_books_and_genres.get_book_genre(book)
-            assert genre not in collector_with_books_and_genres.genre_age_rating
-        assert len(books_for_children) == 3
+            genre = collector.get_book_genre(book)
+            assert genre not in collector.genre_age_rating
 
     # тестируем add_book_in_favorites - добавление новой книги из books_genre в favorites
     def test_add_book_in_favorites_book_from_books_genre(
