@@ -85,12 +85,15 @@ class TestBooksCollector:
         assert collector_with_books_and_genres.get_book_genre(book_name) == "Фантастика"
 
     # параметризация для проверки установки жанра у разных книг добавленных в books_genre
-    @pytest.mark.parametrize("genre", ["Фантастика", "Детективы"])
+    @pytest.mark.parametrize(
+        "book_name, genre",
+        [["Гарри Поттер и дары смерти", "Фантастика"], ["Шерлок Холмс", "Детективы"]],
+    )
     # тестируем set_book_genre - установка жанра соответсвенно книге у добавленных в books_genre книг
-    def test_set_book_genre_books_from_books_genre(self, collector_with_books, genre):
-        for book in collector_with_books.books_genre.keys():
-            collector_with_books.set_book_genre(book, genre)
-            assert collector_with_books.books_genre[book] == genre
+    def test_set_book_genre_books_from_books_genre(self, collector, book_name, genre):
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
+        assert collector.books_genre[book_name] == genre
 
     # тестируем set_book_genre - книге не из books_genre жанр из genre не присваивается
     def test_set_book_genre_books_not_in_books_genre(self, collector_with_books):
@@ -149,7 +152,9 @@ class TestBooksCollector:
     def test_get_books_with_specific_genre_empty_lst(
         self, collector_with_books_and_genres, genre
     ):
-        assert collector_with_books_and_genres.get_books_with_specific_genre(genre) == []
+        assert (
+            collector_with_books_and_genres.get_books_with_specific_genre(genre) == []
+        )
 
     # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
     def test_get_books_genre_empty_collection(self, collector):
@@ -241,5 +246,7 @@ class TestBooksCollector:
         ]
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
-    def test_get_list_of_favorites_books_no_books_in_favorites(self, collector_with_books):
+    def test_get_list_of_favorites_books_no_books_in_favorites(
+        self, collector_with_books
+    ):
         assert collector_with_books.get_list_of_favorites_books() == []
