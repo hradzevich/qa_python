@@ -166,15 +166,23 @@ class TestBooksCollector:
             assert collector.get_book_genre(book) == "Детективы"
 
     # параметризация для проверки вывода пустого списка, если жанра нет среди книг в коллекции и отсутствует в списке genre
-    @pytest.mark.parametrize("genre", ["Ужасы", "Хоррор"])
+    @pytest.mark.parametrize("unavailable_genre", ["Ужасы", "Хоррор"])
     # тестируем get_books_with_specific_genre -  выводит пустой список книг с жанром из списка genre,
     # так как книги с этим жанром не в коллекции, и с жанром "Хоррор", которого нет в  списке genre
     def test_get_books_with_specific_genre_empty_lst(
-        self, collector_with_books_and_genres, genre
+        self, collector, unavailable_genre
     ):
-        assert (
-            collector_with_books_and_genres.get_books_with_specific_genre(genre) == []
-        )
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        assert collector.get_books_with_specific_genre(unavailable_genre) == []
 
     # тестируем get_books_genre - получаем пустой словарь, если книги в коллекцию не были добавлены
     def test_get_books_genre_empty_collection(self, collector):
