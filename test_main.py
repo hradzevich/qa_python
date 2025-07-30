@@ -190,22 +190,14 @@ class TestBooksCollector:
             collector.set_book_genre(book, genre)
         books_for_children = collector.get_books_for_children()
         for book in books_for_children:
-            genre = collector.get_book_genre(book)
-            assert genre not in collector.genre_age_rating
+            assert collector.get_book_genre(book) not in collector.genre_age_rating
 
     # тестируем add_book_in_favorites - добавление новой книги из books_genre в favorites
     def test_add_book_in_favorites_book_from_books_genre(self, collector):
-        books_with_genres = {
-            "Гарри Поттер и дары смерти": "Фантастика",
-            "Шерлок Холмс": "Детективы",
-            "Том и Джерри": "Мультфильмы",
-            "Достать ножи": "Детективы",
-            "Друзья": "Комедии",
-        }
-        for book, genre in books_with_genres.items():
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
             collector.add_new_book(book)
-            collector.set_book_genre(book, genre)
-        book_name = "Достать ножи"
+        book_name = "Шерлок Холмс"
         collector.add_book_in_favorites(book_name)
         assert book_name in collector.favorites
 
@@ -217,16 +209,9 @@ class TestBooksCollector:
     def test_add_book_in_favorites_unavailable_books_for_favorites(
         self, collector, unavailable_book_for_favorites
     ):
-        books_with_genres = {
-            "Гарри Поттер и дары смерти": "Фантастика",
-            "Шерлок Холмс": "Детективы",
-            "Том и Джерри": "Мультфильмы",
-            "Достать ножи": "Детективы",
-            "Друзья": "Комедии",
-        }
-        for book, genre in books_with_genres.items():
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
             collector.add_new_book(book)
-            collector.set_book_genre(book, genre)
         collector.add_book_in_favorites("Гарри Поттер и дары смерти")
         before_change_favorites = len(collector.favorites)
         collector.add_book_in_favorites(unavailable_book_for_favorites)
@@ -235,16 +220,9 @@ class TestBooksCollector:
 
     # тестируем delete_book_from_favorites - книга, ранее добавленная в favorites, удаляется из favorites
     def test_delete_book_from_favorites_book_in_favorites(self, collector):
-        books_with_genres = {
-            "Гарри Поттер и дары смерти": "Фантастика",
-            "Шерлок Холмс": "Детективы",
-            "Том и Джерри": "Мультфильмы",
-            "Достать ножи": "Детективы",
-            "Друзья": "Комедии",
-        }
-        for book, genre in books_with_genres.items():
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс", "Том и Джерри"]
+        for book in books_to_collection:
             collector.add_new_book(book)
-            collector.set_book_genre(book, genre)
             collector.add_book_in_favorites(book)
         book_to_delete = "Том и Джерри"
         collector.delete_book_from_favorites(book_to_delete)
@@ -252,16 +230,9 @@ class TestBooksCollector:
 
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
     def test_delete_book_from_favorites_book_not_in_favorites(self, collector):
-        books_with_genres = {
-            "Гарри Поттер и дары смерти": "Фантастика",
-            "Шерлок Холмс": "Детективы",
-            "Том и Джерри": "Мультфильмы",
-            "Достать ножи": "Детективы",
-            "Друзья": "Комедии",
-        }
-        for book, genre in books_with_genres.items():
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
             collector.add_new_book(book)
-            collector.set_book_genre(book, genre)
         collector.add_book_in_favorites("Гарри Поттер и дары смерти")
         book_to_delete = "Шерлок Холмс"
         before_change_favorites = len(collector.favorites)
@@ -271,16 +242,9 @@ class TestBooksCollector:
 
     # тестируем get_list_of_favorites_books - получение списка книг, добавленных в favorites
     def test_get_list_of_favorites_books_books_in_favorites(self, collector):
-        books_with_genres = {
-            "Гарри Поттер и дары смерти": "Фантастика",
-            "Шерлок Холмс": "Детективы",
-            "Том и Джерри": "Мультфильмы",
-            "Достать ножи": "Детективы",
-            "Друзья": "Комедии",
-        }
-        for book, genre in books_with_genres.items():
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
             collector.add_new_book(book)
-            collector.set_book_genre(book, genre)
         collector.add_book_in_favorites("Гарри Поттер и дары смерти")
         assert collector.get_list_of_favorites_books() == ["Гарри Поттер и дары смерти"]
 
