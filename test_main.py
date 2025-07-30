@@ -200,9 +200,19 @@ class TestBooksCollector:
 
     # тестируем get_books_genre - получаем словарь с названиями книг и присвоенными им жанрами
     def test_get_books_genre_collection_with_books_and_genres(
-        self, collector_with_books_and_genres
+        self, collector
     ):
-        assert collector_with_books_and_genres.get_books_genre() == {
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        assert collector.get_books_genre() == {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
             "Том и Джерри": "Мультфильмы",
