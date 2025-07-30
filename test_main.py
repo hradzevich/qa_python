@@ -276,9 +276,7 @@ class TestBooksCollector:
         assert after_change_favorites == before_change_favorites
 
     # тестируем delete_book_from_favorites - книга, ранее добавленная в favorites, удаляется из favorites
-    def test_delete_book_from_favorites_book_in_favorites(
-        self, collector
-    ):
+    def test_delete_book_from_favorites_book_in_favorites(self, collector):
         books_with_genres = {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
@@ -295,9 +293,7 @@ class TestBooksCollector:
         assert book_to_delete not in collector.favorites
 
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
-    def test_delete_book_from_favorites_book_not_in_favorites(
-        self, collector
-    ):
+    def test_delete_book_from_favorites_book_not_in_favorites(self, collector):
         books_with_genres = {
             "Гарри Поттер и дары смерти": "Фантастика",
             "Шерлок Холмс": "Детективы",
@@ -316,17 +312,20 @@ class TestBooksCollector:
         assert after_change_favorites == before_change_favorites
 
     # тестируем get_list_of_favorites_books - получение списка книг, добавленных в favorites
-    def test_get_list_of_favorites_books_books_in_favorites(
-        self, collector_with_favorites
-    ):
-        collector_with_favorites.get_list_of_favorites_books()
-        assert collector_with_favorites.favorites == [
-            "Гарри Поттер и дары смерти",
-            "Том и Джерри",
-        ]
+    def test_get_list_of_favorites_books_books_in_favorites(self, collector):
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        collector.add_book_in_favorites("Гарри Поттер и дары смерти")
+        assert collector.get_list_of_favorites_books() == ["Гарри Поттер и дары смерти"]
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
-    def test_get_list_of_favorites_books_no_books_in_favorites(
-        self, collector_with_books
-    ):
-        assert collector_with_books.get_list_of_favorites_books() == []
+    def test_get_list_of_favorites_books_no_books_in_favorites(self, collector):
+        assert collector.get_list_of_favorites_books() == []
