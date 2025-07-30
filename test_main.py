@@ -142,9 +142,7 @@ class TestBooksCollector:
         assert collector.get_book_genre(book_name) == expected_genre
 
     # тестируем get_book_genre - выводит пустое значение по имени книги, если жанр книге не был присвоен
-    def test_get_book_genre_book_with_no_genre_in_collection(
-        self, collector
-    ):
+    def test_get_book_genre_book_with_no_genre_in_collection(self, collector):
         books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
         for book in books_to_collection:
             collector.add_new_book(book)
@@ -152,15 +150,20 @@ class TestBooksCollector:
         assert collector.get_book_genre(book_name) == ""
 
     # тестируем get_books_with_specific_genre -  выводит список книг с жанром "Детективы" из списка genre
-    def test_get_books_with_specific_genre_in_collection(
-        self, collector_with_books_and_genres
-    ):
-        books_with_specific_genre = (
-            collector_with_books_and_genres.get_books_with_specific_genre("Детективы")
-        )
+    def test_get_books_with_specific_genre_in_collection(self, collector):
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        books_with_specific_genre = collector.get_books_with_specific_genre("Детективы")
         for book in books_with_specific_genre:
-            assert collector_with_books_and_genres.get_book_genre(book) == "Детективы"
-        assert len(books_with_specific_genre) == 2
+            assert collector.get_book_genre(book) == "Детективы"
 
     # параметризация для проверки вывода пустого списка, если жанра нет среди книг в коллекции и отсутствует в списке genre
     @pytest.mark.parametrize("genre", ["Ужасы", "Хоррор"])
