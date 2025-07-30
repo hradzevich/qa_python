@@ -127,10 +127,19 @@ class TestBooksCollector:
     )
     # тестируем get_book_genre - выводит присвоенный книге жанр по её имени
     def test_get_book_genre_book_with_genre_in_collection(
-        self, collector_with_books_and_genres, book_name, expected_genre
+        self, collector, book_name, expected_genre
     ):
-        genre_in_collection = collector_with_books_and_genres.get_book_genre(book_name)
-        assert genre_in_collection == expected_genre
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        assert collector.get_book_genre(book_name) == expected_genre
 
     # тестируем get_book_genre - выводит пустое значение по имени книги, если жанр книге не был присвоен
     def test_get_book_genre_book_with_no_genre_in_collection(
