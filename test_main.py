@@ -189,8 +189,11 @@ class TestBooksCollector:
         assert collector.get_books_genre() == {}
 
     # тестируем get_books_genre - получаем словарь только с названиями книг, так как жанры не были присвоены
-    def test_get_books_genre_collection_with_books(self, collector_with_books):
-        assert collector_with_books.get_books_genre() == {
+    def test_get_books_genre_collection_with_books(self, collector):
+        books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
+        for book in books_to_collection:
+            collector.add_new_book(book)
+        assert collector.get_books_genre() == {
             "Гарри Поттер и дары смерти": "",
             "Шерлок Холмс": "",
         }
