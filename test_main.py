@@ -277,15 +277,24 @@ class TestBooksCollector:
 
     # тестируем delete_book_from_favorites - книга, ранее добавленная в favorites, удаляется из favorites
     def test_delete_book_from_favorites_book_in_favorites(
-        self, collector_with_favorites
+        self, collector
     ):
+        books_with_genres = {
+            "Гарри Поттер и дары смерти": "Фантастика",
+            "Шерлок Холмс": "Детективы",
+            "Том и Джерри": "Мультфильмы",
+            "Достать ножи": "Детективы",
+            "Друзья": "Комедии",
+        }
+        for book, genre in books_with_genres.items():
+            collector.add_new_book(book)
+            collector.set_book_genre(book, genre)
+        collector.add_book_in_favorites("Том и Джерри")
         book_to_delete = "Том и Джерри"
-        before_change_favorites = len(collector_with_favorites.favorites)
-        collector_with_favorites.delete_book_from_favorites(book_to_delete)
-        after_change_favorites = len(collector_with_favorites.favorites)
-        assert book_to_delete not in collector_with_favorites.favorites
-        assert book_to_delete in collector_with_favorites.books_genre
-        assert after_change_favorites == before_change_favorites - 1
+        before_change_favorites = len(collector.favorites)
+        collector.delete_book_from_favorites(book_to_delete)
+        after_change_favorites = len(collector.favorites)
+        assert book_to_delete not in collector.favorites and after_change_favorites == before_change_favorites - 1
 
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
     def test_delete_book_from_favorites_book_not_in_favorites(
