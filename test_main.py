@@ -17,7 +17,7 @@ class TestBooksCollector:
     # тестируем add_new_book - добавление книг с валидным количеством символов в названии
     def test_add_new_book_add_books_with_valid_len(self, collector, book_name):
         collector.add_new_book(book_name)
-        assert book_name in collector.books_genre.keys()
+        assert book_name in collector.get_books_genre().keys()
 
     # параметризация для проверки, что книги с невалидным количеством символов в названии (0, 41, 59) не попадают в коллекцию
     @pytest.mark.parametrize(
@@ -31,17 +31,17 @@ class TestBooksCollector:
     # тестируем add_new_book - книги с невалидным количеством символов в названии не добавляются в коллекцию
     def test_add_new_book_add_books_with_invalid_len(self, collector, book_name):
         collector.add_new_book(book_name)
-        assert book_name not in collector.books_genre.keys()
+        assert book_name not in collector.get_books_genre().keys()
 
     # тестируем add_new_book - книга повторно не добавляется в коллекцию
     def test_add_new_book_add_added_book(self, collector):
         books_to_collection = ["Гарри Поттер и дары смерти", "Шерлок Холмс"]
         for book in books_to_collection:
             collector.add_new_book(book)
-        before_adding_book_again = len(collector.books_genre)
+        before_adding_book_again = len(collector.get_books_genre())
         book_to_add_again = "Гарри Поттер и дары смерти"
         collector.add_new_book(book_to_add_again)
-        after_adding_book_again = len(collector.books_genre)
+        after_adding_book_again = len(collector.get_books_genre())
         assert before_adding_book_again == after_adding_book_again
 
     # параметризация для проверки установки жанра у разных книг добавленных в books_genre
@@ -53,14 +53,14 @@ class TestBooksCollector:
     def test_set_book_genre_books_from_books_genre(self, collector, book_name, genre):
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
-        assert collector.books_genre[book_name] == genre
+        assert collector.get_book_genre(book_name) == genre
 
     # тестируем set_book_genre - книге не из books_genre жанр из genre не присваивается
     def test_set_book_genre_books_not_in_books_genre(self, collector):
         book_name = "Оно"
         genre = "Ужасы"
         collector.set_book_genre(book_name, genre)
-        assert book_name not in collector.books_genre
+        assert collector.get_book_genre("Оно") == ""
 
     # тестируем set_book_genre - книге из books_genre не присваивается жанр не из genre
     def test_set_book_genre_genre_not_in_genre(self, collector):
@@ -70,7 +70,7 @@ class TestBooksCollector:
         book_name = "Гарри Поттер и дары смерти"
         genre = "Хоррор"
         collector.set_book_genre(book_name, genre)
-        assert collector.books_genre.get(book_name) == ""
+        assert collector.get_book_genre(book_name) == ""
 
     # параметризация для проверки соответствия выведенного жанра жанру в books_genre
     @pytest.mark.parametrize(
@@ -199,7 +199,7 @@ class TestBooksCollector:
             collector.add_new_book(book)
         book_name = "Шерлок Холмс"
         collector.add_book_in_favorites(book_name)
-        assert book_name in collector.favorites
+        assert book_name in collector.get_list_of_favorites_books()
 
     # параметризация для проверки, что книга не из не из books_genre и книга уже добавленная в favorites не могут быть добавлены в favorites
     @pytest.mark.parametrize(
@@ -213,9 +213,9 @@ class TestBooksCollector:
         for book in books_to_collection:
             collector.add_new_book(book)
         collector.add_book_in_favorites("Гарри Поттер и дары смерти")
-        before_change_favorites = len(collector.favorites)
+        before_change_favorites = len(collector.get_list_of_favorites_books())
         collector.add_book_in_favorites(unavailable_book_for_favorites)
-        after_change_favorites = len(collector.favorites)
+        after_change_favorites = len(collector.get_list_of_favorites_books())
         assert after_change_favorites == before_change_favorites
 
     # тестируем delete_book_from_favorites - книга, ранее добавленная в favorites, удаляется из favorites
@@ -226,7 +226,7 @@ class TestBooksCollector:
             collector.add_book_in_favorites(book)
         book_to_delete = "Том и Джерри"
         collector.delete_book_from_favorites(book_to_delete)
-        assert book_to_delete not in collector.favorites
+        assert book_to_delete not in collector.get_list_of_favorites_books()
 
     # тестируем delete_book_from_favorites - книга не добавленная в favorites не может быть удалена из favorites
     def test_delete_book_from_favorites_book_not_in_favorites(self, collector):
@@ -235,9 +235,9 @@ class TestBooksCollector:
             collector.add_new_book(book)
         collector.add_book_in_favorites("Гарри Поттер и дары смерти")
         book_to_delete = "Шерлок Холмс"
-        before_change_favorites = len(collector.favorites)
+        before_change_favorites = len(collector.get_list_of_favorites_books())
         collector.delete_book_from_favorites(book_to_delete)
-        after_change_favorites = len(collector.favorites)
+        after_change_favorites = len(collector.get_list_of_favorites_books())
         assert after_change_favorites == before_change_favorites
 
     # тестируем get_list_of_favorites_books - получение списка книг, добавленных в favorites
@@ -249,6 +249,6 @@ class TestBooksCollector:
         assert collector.get_list_of_favorites_books() == ["Гарри Поттер и дары смерти"]
 
     # тестируем get_list_of_favorites_books - получение пустого списка, если в favorites ничего не было добавлено
-    def test_get_list_of_favorites_books_books_in_favorites(self, collector):
+    def test_get_list_of_favorites_books_books_empty(self, collector):
         assert collector.get_list_of_favorites_books() == []
     
